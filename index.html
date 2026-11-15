@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evan Eldridge Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout idea: a designer's spec sheet. Big grotesque headlines, mono "redline" annotations that mark real decisions (D1, D2...), one cobalt accent. */
+  --paper:#F2F3F0;
+  --surface:#FFFFFF;
+  --ink:#15171B;
+  --muted:#5A6068;
+  --line:#D5D8D2;
+  --accent:#2E43E0;
+  --accent-soft:#E2E6FF;
+  --font-display:"Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --font-body:"Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111317;--surface:#191C21;--ink:#ECEEF1;--muted:#9BA2AB;--line:#2B3038;--accent:#8E9BFF;--accent-soft:#1F2547;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111317;--surface:#191C21;--ink:#ECEEF1;--muted:#9BA2AB;--line:#2B3038;--accent:#8E9BFF;--accent-soft:#1F2547;color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+a:focus-visible,button:focus-visible,input:focus-visible,canvas:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+img{max-width:100%}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.05;letter-spacing:-0.02em}
+p{margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--font-mono);font-size:12.5px;letter-spacing:0.02em;text-transform:uppercase}
+.muted{color:var(--muted)}
+.prose{max-width:65ch;display:grid;gap:14px}
+
+/* top bar */
+.top{border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--paper);z-index:10}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px}
+.brand{font-family:var(--font-display);font-weight:800;font-size:20px;text-decoration:none;letter-spacing:-0.02em}
+.nav{display:flex;gap:20px;flex-wrap:wrap}
+.nav a{text-decoration:none;color:var(--muted);font-size:15px}
+.nav a:hover{color:var(--ink)}
+
+/* views */
+.view{display:none}
+.view.on{display:block}
+
+/* hero */
+.hero{padding:72px 0 40px;display:grid;gap:28px}
+.hero h1{font-size:clamp(44px,7.4vw,96px);font-weight:800}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lede{font-size:20px;max-width:58ch;color:var(--muted)}
+.hero .lede strong{color:var(--ink);font-weight:600}
+.facts{display:flex;flex-wrap:wrap;gap:8px 22px}
+.facts span{display:flex;gap:8px;align-items:baseline}
+
+/* work index */
+.section-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:40px 0 16px;border-bottom:2px solid var(--ink)}
+.section-head h2{font-size:28px}
+.work{list-style:none;margin:0;padding:0}
+.card{display:grid;grid-template-columns:56px 1.3fr 1fr 64px;gap:24px;align-items:start;padding:28px 0;border-bottom:1px solid var(--line);text-decoration:none;transition:background .15s}
+.card:hover{background:var(--surface)}
+.card:hover .card-title{color:var(--accent)}
+.card .num{font-family:var(--font-mono);font-size:13px;color:var(--muted);padding-top:6px}
+.card-title{font-size:clamp(24px,3vw,34px);font-weight:700;transition:color .15s}
+.card .what{margin-top:8px;color:var(--muted);max-width:52ch}
+.tags{display:grid;gap:4px}
+.tags div{display:grid;grid-template-columns:64px 1fr;gap:8px;font-size:15px}
+.tags dt,.tags .k{font-family:var(--font-mono);font-size:11.5px;text-transform:uppercase;color:var(--muted);padding-top:3px}
+.card .go{font-family:var(--font-mono);font-size:13px;color:var(--accent);padding-top:6px;white-space:nowrap;text-align:right}
+
+/* about */
+.about{display:grid;grid-template-columns:1fr 1.6fr;gap:40px;padding:48px 0 24px}
+.about h2{font-size:28px}
+.contact{display:grid;gap:10px;margin-top:20px}
+.contact a{color:var(--accent);text-decoration:none;font-weight:600}
+.contact a:hover{text-decoration:underline}
+.contact .row{display:grid;grid-template-columns:90px 1fr;gap:12px;align-items:baseline}
+
+/* case study */
+.back{display:inline-block;margin:28px 0 0;text-decoration:none;color:var(--muted);font-family:var(--font-mono);font-size:13px}
+.back:hover{color:var(--accent)}
+.cs-hero{padding:28px 0 32px;display:grid;gap:18px;border-bottom:2px solid var(--ink)}
+.cs-hero h1{font-size:clamp(36px,5.6vw,68px);font-weight:800;max-width:18ch}
+.cs-hero .sub{font-size:19px;color:var(--muted);max-width:60ch}
+.spec{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0;border-bottom:1px solid var(--line)}
+.spec div{padding:16px 16px 16px 0;display:grid;gap:4px}
+.spec div+div{padding-left:16px;border-left:1px solid var(--line)}
+.spec .v{font-size:15px;font-weight:500}
+.block{display:grid;grid-template-columns:200px 1fr;gap:32px;padding:40px 0;border-bottom:1px solid var(--line)}
+.block > *{min-width:0}
+.block > .label{position:sticky;top:84px;align-self:start}
+.block h2{font-size:24px;margin-bottom:6px}
+.decisions{display:grid;gap:0}
+.dec{display:grid;grid-template-columns:52px 1fr;gap:16px;padding:20px 0;border-top:1px dashed var(--line)}
+.dec:first-child{border-top:0;padding-top:0}
+.dec .tag{font-family:var(--font-mono);font-size:12px;color:var(--accent);border:1px solid var(--accent);border-radius:3px;height:24px;display:grid;place-items:center;font-weight:500}
+.dec h3{font-family:var(--font-body);font-size:18px;font-weight:600;letter-spacing:0;line-height:1.35;margin-bottom:6px}
+.dec .why{margin-top:8px;font-size:15px;color:var(--muted)}
+.dec .why b{font-family:var(--font-mono);font-size:11.5px;text-transform:uppercase;color:var(--ink);font-weight:500;margin-right:6px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;display:grid;gap:8px;align-content:start}
+.box ul{margin:0;padding-left:18px;display:grid;gap:6px}
+.box h3{font-family:var(--font-mono);font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.quote{border-left:3px solid var(--accent);padding:4px 0 4px 18px;font-family:var(--font-display);font-size:clamp(22px,2.6vw,30px);font-weight:500;line-height:1.25;max-width:30ch}
+.quote + .muted{margin-top:8px;font-size:14px}
+.note{font-size:14px;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:10px 14px;background:var(--surface)}
+.next{display:flex;justify-content:space-between;gap:16px;padding:32px 0 64px;flex-wrap:wrap}
+.next a{text-decoration:none;display:grid;gap:4px}
+.next a .t{font-family:var(--font-display);font-size:24px;font-weight:700}
+.next a:hover .t{color:var(--accent)}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px}
+.flow span{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+.flow i{font-style:normal;color:var(--muted)}
+
+
+/* Moodwave demo */
+.mw{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px;display:grid;grid-template-columns:auto 1fr;gap:32px}
+.mw-left{display:grid;gap:14px;justify-items:center}
+.mw canvas{width:240px;height:240px;border-radius:50%;cursor:crosshair;touch-action:none;display:block}
+.wheel-holder{position:relative;width:240px;height:240px}
+.wheel-dot{position:absolute;width:22px;height:22px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35),0 2px 6px rgba(0,0,0,.3);transform:translate(-50%,-50%);pointer-events:none}
+.mw-slider{display:grid;gap:4px;width:240px}
+.mw-slider label{display:flex;justify-content:space-between;font-size:14px}
+.mw-slider label span{font-family:var(--font-mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.mw-slider input{width:100%;accent-color:var(--accent)}
+.swatch{width:240px;height:36px;border-radius:8px;border:1px solid var(--line)}
+.mw-right{display:grid;gap:20px;align-content:start}
+.mw-mood{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.mw-mood .big{font-family:var(--font-display);font-size:40px;font-weight:800;line-height:1}
+.quad{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.quad div{border:1px solid var(--line);border-radius:8px;padding:8px 10px;display:grid;gap:2px}
+.quad div .p{font-family:var(--font-mono);font-size:18px;font-variant-numeric:tabular-nums}
+.quad div.top{border-color:var(--accent);background:var(--accent-soft)}
+.feats{display:grid;gap:8px}
+.feat{display:grid;grid-template-columns:110px 1fr 64px;gap:12px;align-items:center;font-size:14px}
+.feat .bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.feat .bar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .2s}
+.feat .n{font-family:var(--font-mono);font-size:12.5px;text-align:right;font-variant-numeric:tabular-nums}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:14px}
+
+.gallery{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(220px,250px);gap:20px;overflow-x:auto;padding:4px 2px 14px;scroll-snap-type:x mandatory}
+.gallery figure{margin:0;display:grid;gap:10px;align-content:start;scroll-snap-align:start}
+.gallery img{width:100%;border-radius:22px;border:1px solid var(--line);display:block;background:#fff}
+.gallery figcaption{font-size:14px;color:var(--muted);line-height:1.45}
+.gallery figcaption b{font-family:var(--font-mono);font-size:11.5px;color:var(--accent);font-weight:500;margin-right:6px}
+.wide-shot{margin:8px 0 0;display:grid;gap:10px}
+.wide-shot img{width:100%;max-width:720px;border-radius:16px;border:1px solid var(--line);display:block}
+.wide-shot figcaption{font-size:14px;color:var(--muted)}
+.ext{color:var(--accent);font-weight:600;text-decoration:none}
+.ext:hover{text-decoration:underline}
+.pl{margin-top:20px;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.pl-head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:18px 20px;border-bottom:1px solid var(--line)}
+.pl-title{display:flex;gap:14px;align-items:center}
+.pl-cover{width:56px;height:56px;border-radius:8px;flex:none}
+.pl-title h3{font-family:var(--font-display);font-size:22px;font-weight:700}
+.pl-ctrls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pl-ctrls label{display:flex;gap:8px;align-items:center;font-size:14px;cursor:pointer}
+.pl-ctrls input{accent-color:var(--accent);width:16px;height:16px}
+.pill-btn{font:500 14px var(--font-body);background:none;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer}
+.pill-btn:hover{border-color:var(--accent);color:var(--accent)}
+.pl ol{list-style:none;margin:0;padding:0}
+.pl li{display:grid;grid-template-columns:28px 1fr auto auto;gap:14px;align-items:center;padding:10px 20px;border-bottom:1px solid var(--line)}
+.pl li:last-child{border-bottom:0}
+.pl li .i{font-family:var(--font-mono);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.pl li .t{font-weight:600;line-height:1.3}
+.pl li .a{font-size:14px;color:var(--muted)}
+.pl .meta{display:flex;gap:6px;align-items:center}
+.badge{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;border-radius:4px;padding:2px 6px;border:1px solid var(--line);color:var(--muted)}
+.badge.mood{border-color:var(--accent);color:var(--accent)}
+.badge.taste{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.rate{display:flex;gap:4px}
+.rate button{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:none;color:var(--muted);cursor:pointer;display:grid;place-items:center}
+.rate button:hover{border-color:var(--accent);color:var(--accent)}
+.rate button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.pl-foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;padding:12px 20px;font-size:13px;color:var(--muted);background:var(--paper)}
+@media (max-width:560px){.pl li{grid-template-columns:24px 1fr auto;}.pl .meta{display:none}}
+
+footer{border-top:1px solid var(--line);padding:24px 0 40px;font-size:14px;color:var(--muted)}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+@media (max-width:860px){
+  .card{grid-template-columns:40px 1fr;gap:12px 16px}
+  .card .tags{grid-column:2}
+  .card .go{grid-column:2;padding-top:0}
+  .about{grid-template-columns:1fr;gap:16px}
+  .block{grid-template-columns:1fr;gap:12px}
+  .block > .label{position:static}
+  .split{grid-template-columns:1fr}
+  .mw{grid-template-columns:1fr}
+}
+@media (max-width:480px){
+  .wrap{padding:0 16px}
+  .nav{gap:14px}
+  .nav a.hide-sm{display:none}
+  .quad{grid-template-columns:repeat(2,1fr)}
+  .feat{grid-template-columns:96px 1fr 56px}
+  .hero{padding-top:48px}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#home">Evan Eldridge</a>
+    <nav class="nav" aria-label="Main">
+      <a href="#home">Work</a>
+      <a href="#about-me" class="hide-sm">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- ============ HOME ============ -->
+<section class="view" data-view="home" id="v-home">
+  <div class="wrap">
+    <div class="hero">
+      <p class="mono muted">Product &amp; UX design · Indiana University, Luddy School</p>
+      <h1>I design with users’ <em>pain points and feelings</em> in mind.</h1>
+      <p class="lede">Plans that stall in a group chat. Viewers who feel left out of a live stream. Students unsure which major fits them. I'm <strong>Evan Eldridge</strong>, an Informatics student with an HCI minor, and I start every design from what frustrates people and how it makes them feel.</p>
+      <div class="facts mono muted">
+        <span>Former Tech Intern · You The Driver</span>
+        <span>B.S. Informatics · May 2027</span>
+        <span>Open to product design &amp; UX internships</span>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <h2>Selected work</h2>
+      <span class="mono muted">4 projects</span>
+    </div>
+    <ul class="work">
+      <li><a class="card" href="#say-when">
+        <span class="num">01</span>
+        <div>
+          <h3 class="card-title">Say When</h3>
+          <p class="what">Helping friend groups turn "we should hang out" into a plan that happens, inside the group chat. A Meta design brief.</p>
+        </div>
+        <div class="tags">
+          <div><span class="k">Brief</span><span>Meta · INFO-I 441</span></div>
+          <div><span class="k">Product</span><span>Messaging feature</span></div>
+          <div><span class="k">Role</span><span>Research, Figma, presenting</span></div>
+        </div>
+        <span class="go">Read →</span>
+      </a></li>
+      <li><a class="card" href="#hype-voyage">
+        <span class="num">02</span>
+        <div>
+          <h3 class="card-title">Hype Voyage</h3>
+          <p class="what">Reimagining Twitch's mobile Hype Train as a voyage a streamer's chat moves forward together. Honorable mention from Twitch's Principal UX Researcher.</p>
+        </div>
+        <div class="tags">
+          <div><span class="k">Brief</span><span>Twitch · INFO-I 441</span></div>
+          <div><span class="k">Result</span><span>Honorable mention</span></div>
+          <div><span class="k">Role</span><span>Research, Figma, presenting</span></div>
+        </div>
+        <span class="go">Read →</span>
+      </a></li>
+      <li><a class="card" href="#majorpath">
+        <span class="num">03</span>
+        <div>
+          <h3 class="card-title">MajorPath</h3>
+          <p class="what">An app that helps college students find a major and connect with counselors and alumni who match their interests and goals. Voted the class's Outstanding Project.</p>
+        </div>
+        <div class="tags">
+          <div><span class="k">Course</span><span>INFO-I 300 · Award winner</span></div>
+          <div><span class="k">Product</span><span>iOS app prototype</span></div>
+          <div><span class="k">Role</span><span>Owned the Connect flow</span></div>
+        </div>
+        <span class="go">Read →</span>
+      </a></li>
+      <li><a class="card" href="#moodwave">
+        <span class="num">04</span>
+        <div>
+          <h3 class="card-title">Moodwave</h3>
+          <p class="what">Pick a color for your mood and get a 50-song playlist that blends it with your taste. A working web app I built with Claude.</p>
+        </div>
+        <div class="tags">
+          <div><span class="k">Team</span><span>Team project</span></div>
+          <div><span class="k">Product</span><span>Web app</span></div>
+          <div><span class="k">Role</span><span>Product spec &amp; build</span></div>
+        </div>
+        <span class="go">Try it →</span>
+      </a></li>
+    </ul>
+
+    <div class="about" id="about-me">
+      <div>
+        <p class="mono muted">About</p>
+        <h2>Designer, researcher, and the person who runs the prototype.</h2>
+      </div>
+      <div class="prose">
+        <p>I'm studying Informatics at Indiana University's Luddy School with a minor in Human-Computer Interaction, graduating in May 2027. This semester I'm working through three design briefs from real companies (Meta, Twitch, and Sony PlayStation) in Interaction Design Practice.</p>
+        <p>From April to July 2026 I was a tech intern at <strong>You The Driver</strong>, a pre-seed startup building safety and wellness tools for commercial truck drivers. I designed the app prototype the founder presented publicly at a tech convention, researched wearables and health-data platforms, and helped review the fatigue-scoring model behind the product.</p>
+        <p>Before design, I worked billing for event accounts at Service Sanitation, from small private parties up to Lollapalooza, and ran patient pre-testing as an optometric assistant at Wink Eye Care. Both jobs meant working with all kinds of people and getting the details right.</p>
+        <div class="contact" id="contact">
+          <div class="row"><span class="mono muted">Email</span><span><a href="mailto:eeldrid@iu.edu">eeldrid@iu.edu</a></span></div>
+          <div class="row"><span class="mono muted">LinkedIn</span><span><a href="https://www.linkedin.com/in/evan-eldridge-b0893234a">linkedin.com/in/evan-eldridge-b0893234a</a></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SAY WHEN ============ -->
+<section class="view" data-view="say-when" id="v-say-when">
+  <div class="wrap">
+    <a class="back" href="#home">← All work</a>
+    <div class="cs-hero">
+      <p class="mono muted">01 · Meta design brief</p>
+      <h1>Say When</h1>
+      <p class="sub">Meta's brief, "Where Plans Go to Die," asked how a messaging app could help friend groups move from "we should hang out" to actually following through. My team designed Say When.</p>
+    </div>
+    <div class="spec">
+      <div><span class="mono muted">Brief</span><span class="v">Meta</span></div>
+      <div><span class="mono muted">Course</span><span class="v">INFO-I 441, Fall 2026</span></div>
+      <div><span class="mono muted">Product</span><span class="v">Messaging feature</span></div>
+      <div><span class="mono muted">Team</span><span class="v">5 designers</span></div>
+      <div><span class="mono muted">My role</span><span class="v">Research, Figma, prototyping, presenting</span></div>
+    </div>
+
+    <div class="block">
+      <div class="label"><p class="mono muted">Problem</p><h2>Plans die from uncertainty</h2></div>
+      <div class="prose">
+        <p>The brief was clear that this was never a logistics problem. Our research pointed to something social: plans stall when they're under-detailed, and nobody wants to be the one who pushes. We narrowed our audience to close friends in small group chats.</p>
+        <p>I personally interviewed 3 people for this project.</p>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="label"><p class="mono muted">Concept</p><h2>A plan gets its own space</h2></div>
+      <div class="prose">
+        <p>Say When opens a contained planning space from a calendar button in the chat header, next to FaceTime. It holds the whole group. When, where, and how long each get their own row, and each can be proposed, countered, and agreed on without waiting on the others. When the plan has passed, the space closes on its own.</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="label"><p class="mono muted">Screens</p><h2>One plan, start to finish</h2></div>
+      <div>
+        <div class="gallery">
+          <figure><img src="img/sw-1-chat.png" alt="Group chat called Pickleball Crew where Ryder asks who wants to play Saturday and nobody commits to a time" loading="lazy"><figcaption><b>01</b>A plan starts the usual way: "idk whenever works." The calendar button sits beside FaceTime.</figcaption></figure>
+          <figure><img src="img/sw-2-propose.png" alt="Planning panel with When, Where and How long rows and a time picker set to 10:00 AM" loading="lazy"><figcaption><b>02</b>Ryder proposes 10 AM. The group sees it as a suggestion, not a decision.</figcaption></figure>
+          <figure><img src="img/sw-3-suggest.png" alt="Two time options, 10:00 AM and 12:00 PM, each with two votes" loading="lazy"><figcaption><b>03</b>Jordan suggests 12 PM instead. Both options show who's leaning where.</figcaption></figure>
+          <figure><img src="img/sw-4-set.png" alt="All three details agreed: 12:00 PM, Griffy Courts, about 2 hours" loading="lazy"><figcaption><b>04</b>Every detail is agreed. The space closes on its own after Saturday.</figcaption></figure>
+          <figure><img src="img/sw-5-stalled.png" alt="Where is stalled on transportation, with options to ask again once or switch to somewhere walkable" loading="lazy"><figcaption><b>05</b>When a detail stalls, the group gets two ways forward, shown once.</figcaption></figure>
+        </div>
+        <p style="margin-top:10px;font-size:15px"><a class="ext" href="https://www.figma.com/proto/eC2Dbi8nSJOzZUpwB9RyLW/iOS-Messages-%E2%80%94-Animation-Frames?node-id=85-2&amp;starting-point-node-id=44%3A21">Open the interactive Figma prototype ↗</a></p>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="label"><p class="mono muted">Decisions</p><h2>What we chose and why</h2></div>
+      <div class="decisions">
+        <div class="dec"><span class="tag">D1</span><div>
+          <h3>Prompts ask about details, not attendance</h3>
+          <p>Prompts focus on time, place, and how long, not on who's going.</p>
+          <p class="why"><b>Why</b>Under-detailed plans were the problem we found, so the prompts go straight at the missing details.</p>
+        </div></div>
+        <div class="dec"><span class="tag">D2</span><div>
+          <h3>Nothing posts to the main chat</h3>
+          <p>Everything stays inside the planning space, and the microcopy says so.</p>
+          <p class="why"><b>Why</b>Planning shouldn't flood the group chat for people who aren't deciding yet.</p>
+        </div></div>
+        <div class="dec"><span class="tag">D3</span><div>
+          <h3>Disagreeing adds an option</h3>
+          <p>"Suggest another" lets someone propose an alternative instead of rejecting the plan. Prompts never fill in answers for people: someone proposes, and the group settles it. Reopening an agreed detail creates a new proposal, never a silent change.</p>
+        </div></div>
+        <div class="dec"><span class="tag">D4</span><div>
+          <h3>Nudge the group once, then stop</h3>
+          <p>When a detail stalls, Say When shows the group two ways forward: ask again once, or change the plan, such as switching to somewhere walkable. It's shown once, to the whole group, and never points at one person.</p>
+          <p class="why"><b>Why</b>A reminder that keeps coming back, or calls someone out, feels like nagging and makes people mute the chat.</p>
+        </div></div>
+        <div class="dec"><span class="tag">D5</span><div>
+          <h3>We cut a feature that pressured people to opt in</h3>
+          <p>An early idea asked friends who hadn't opted in to turn on plan detection in the middle of a conversation. We dropped it.</p>
+          <p class="why"><b>Why</b>Asking for consent in front of your friends is social pressure, not real consent. It read as a dark pattern and a privacy step backward.</p>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="label"><p class="mono muted">Outcome</p><h2>What reviewers said</h2></div>
+      <div class="prose">
+        <p class="quote">"The tightest logic chain, the strongest screens, and the most honest deck in the class."</p>
+        <p class="muted">Meta reviewer, Project 1 feedback</p>
+        <p>The same review pushed us on what to fix, and I'm carrying it into the next project:</p>
+        <div class="box"><h3>What I'd change</h3><ul>
+          <li>Name one problem. Our framing let uncertainty, collaboration, and chat structure compete.</li>
+          <li>Start with the simplest version. A threaded reply might do what a separate space does.</li>
+          <li>Show the research. Put how many people we talked to next to every claim.</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <nav class="next" aria-label="More projects">
+      <a href="#home"><span class="mono muted">← Back</span><span class="t">All work</span></a>
+      <a href="#hype-voyage" style="text-align:right"><span class="mono muted">Next · 02</span><span class="t">Hype Voyage →</span></a>
+    </nav>
+  </div>
+</section>
+
+<!-- ============ HYPE VOYAGE ============ -->
+<section class="view" data-view="hype-voyage" id="v-hype-voyage">
+  <div class="wrap">
+    <a class="back" href="#home">← All work</a>
+    <div class="cs-hero">
+      <p class="mono muted">02 · Twitch design brief</p>
+      <h1>Hype Voyage</h1>
+      <p class="sub">Twitch asked us to reimagine the Hype Train on mobile. Our team turned it into a voyage: a ship that sails around the stream as the chat supports the streamer together.</p>
+    </div>
+    <div class="spec">
+      <div><span class="mono muted">Brief</span><span class="v">Twitch</span></div>
+      <div><span class="mono muted">Course</span><span class="v">INFO-I 441, Fall 2026</span></div>
+      <div><span class="mono muted">Product</span><span class="v">Live-stream mobile feature</span></div>
+      <div><span class="mono muted">My role</span><span class="v">Research, Figma screens, prototyping, presenting</span></div>
+      <div><span class="mono muted">Team</span><span class="v">5 designers</span></div>
+      <div><span class="mono muted">Result</span><span class="v">Honorable mention from Twitch</span></div>
+    </div>
+
+    <div class="block">
+      <div class="label"><p class="mono muted">Research</p><h2>What viewers told us</h2></div>
+      <div class="prose">
+        <p>Twitch told us new users are mostly on mobile, with shorter sessions, and that any new version still has to fit with paid support like Bits and subs without cluttering the screen. To hear from viewers, our team posted two threads on Reddit asking what people like and dislike about Hype Trains.</p>
+        <p class="quote">"you're just throwing bits at a progress bar"</p>
+        <p class="muted">Reddit respondent, our team's thread</p>
+        <p>Others described the rotating emotes as FOMO and said they hide Hype Trains completely. Some streamers said they wanted more control over the train.</p>
+        <p>Two findings shaped the design. Viewers often didn't know what rewards were on offer, which we called reward awareness. And viewers who don't spend felt the experience wasn't for them, so pride and a sense of mattering became a goal. We set three principles for the design: excitement, meaning, and cohesion.</p>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="label"><p class="mono muted">Concept</p><h2>A voyage instead of a progress bar</h2></div>
+      <div class="prose">
+        <p>The ship sails a loop around the edge of the stream past four stops, each revealing a reward the streamer set, toward a destination like a personal-best attempt. Bits, subs, and gifts move the ship. Free actions build morale, which never moves the ship on its own but makes every paid contribution move it further. Viewers who stay aboard collect passport stamps, and everyone aboard at arrival gets a postcard with a captured moment from the stream.</p>
+        <p>If the ship doesn't make it, it drops anchor at the last stop for a layover, and the next voyage starts from there. A Versus mode lets two streamers race their ships.</p>
+        
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="label"><p class="mono muted">Screens</p><h2>The voyage on mobile</h2></div>
+      <div>
+        <div class="gallery">
+          <figure><img src="img/hv-1-transit.png" alt="Ship sailing along the top edge of the stream toward stop 2, with a progress card and chat showing passengers boarding and pushing the ship" loading="lazy"><figcaption><b>01</b>In transit: the ship sails the stream's edge, and chat shows who boarded and who pushed.</figcaption></figure>
+          <figure><img src="img/hv-2-arrival.png" alt="Voyage complete sheet with a postcard from Stream PB and a note that every stamp went up a level" loading="lazy"><figcaption><b>02</b>Arrival: everyone aboard gets a postcard, and every stamp goes up a level.</figcaption></figure>
+          <figure><img src="img/hv-3-passport.png" alt="Passport screen with stamp levels from Witness to Gifter's Seal and an open layover stamp" loading="lazy"><figcaption><b>03</b>Passport: stamps level up, and a layover keeps your place for the next trip.</figcaption></figure>
+          <figure><img src="img/hv-4-race.png" alt="Versus race between two ships, 43 percent versus 44 percent, with chat rowing" loading="lazy"><figcaption><b>04</b>Versus: two chats race their ships, and the rival's powder keg can slow you down.</figcaption></figure>
+        </div>
+        <figure class="wide-shot"><img src="img/hv-5-landscape.png" alt="Landscape view with chat closed, the ship riding the top edge of a full-screen stream" loading="lazy"><figcaption>Landscape, chat closed: the voyage stays on the edge of the stream instead of covering it.</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="label"><p class="mono muted">My part</p><h2>What I did</h2></div>
+      <div class="prose">
+        <p>Hype Voyage started as a teammate's concept, and the team chose it as our lead direction. I contributed research and Figma screens, and worked out the screens and interaction details most likely to cause problems. I used Swift and React to prototype parts of the experience, and I presented a core section of our pitch.</p>
+        <p>I pushed for the experience to be easy to minimize or hide, and built for both landscape and portrait.</p>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="label"><p class="mono muted">Outcome</p><h2>Honorable mention</h2></div>
+      <div class="prose">
+        <p>Stephen Hicks, Principal UX Researcher at Twitch, reviewed five teams' concepts and gave Hype Voyage an honorable mention.</p>
+        <p class="quote">"The best free-to-paid loop in the room."</p>
+        <p class="muted">Stephen Hicks, Twitch, final critique</p>
+        <p>He named morale the strongest free-to-paid mechanic, called the layover the best recovery path, and said we made the clearest connection to Twitch's Q4 business goals of any team.</p>
+        <div class="box"><h3>What I'd change</h3><ul>
+          <li>Make progress, the destination, and real rewards obvious on a phone. A thin line around the video and placeholder rewards hid a strong system.</li>
+          <li>Lead with a voyage the streamer starts on purpose, so it never launches at the wrong moment.</li>
+          <li>Simplify. Ports, stops, Studio, Versus, and Fleets added up to a lot for creators to set up.</li>
+          <li>Show the research clearly: what we wanted to learn, who we talked to, and how many. And keep the pride insight in the final story.</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <nav class="next" aria-label="More projects">
+      <a href="#say-when"><span class="mono muted">← 01</span><span class="t">Say When</span></a>
+      <a href="#majorpath" style="text-align:right"><span class="mono muted">Next · 03</span><span class="t">MajorPath →</span></a>
+    </nav>
+  </div>
+</section>
+
+<!-- ============ MAJORPATH ============ -->
+<section class="view" data-view="majorpath" id="v-majorpath">
+  <div class="wrap">
+    <a class="back" href="#home">← All work</a>
+    <div class="cs-hero">
+      <p class="mono muted">03 · INFO-I 300 · HCI</p>
+      <h1>MajorPath</h1>
+      <p class="sub">Choosing a major is easier when you can talk to people who've been there. MajorPath helps college students find majors that fit them, then connects them with counselors and alumni who match their interests and goals.</p>
+    </div>
+    <div class="spec">
+      <div><span class="mono muted">Course</span><span class="v">INFO-I 300, Spring 2025</span></div>
+      <div><span class="mono muted">Product</span><span class="v">iOS app prototype</span></div>
+      <div><span class="mono muted">Team</span><span class="v">4 designers, one flow each</span></div>
+      <div><span class="mono muted">My part</span><span class="v">Connecting with counselors and alumni</span></div>
+      <div><span class="mono muted">Result</span><span class="v">Outstanding Project Award</span></div>
+    </div>
+
+    <div class="block">
+      <div class="label"><p class="mono muted">The app</p><h2>Four flows, four owners</h2></div>
+      <div class="prose">
+        <p>The team split MajorPath into four tasks and each of us owned one: creating an account and taking a short survey; connecting with academic advisors and finding alumni; uploading SAT or ACT scores and taking an aptitude test; and adding transcripts to get major suggestions.</p>
+        <p>I owned the second one. Once a student has majors in mind, the Connect tab helps them find counselors and alumni to talk to, judge who's worth reaching out to, and get in touch.</p>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="label"><p class="mono muted">Screens</p><h2>The Connect flow</h2></div>
+      <div>
+        <div class="gallery">
+          <figure><img src="img/mp-1-connections.png" alt="Connections page with search, a filter, three alumni and three counselors, each with a View More button" loading="lazy"><figcaption><b>01</b>Connections: alumni and counselors side by side, with search and a filter.</figcaption></figure>
+          <figure><img src="img/mp-2-alumni.png" alt="Full list of alumni with photos and names" loading="lazy"><figcaption><b>02</b>View More opens the full list. Alumni can be filtered by major, job field, experience, and rating.</figcaption></figure>
+          <figure><img src="img/mp-3-counselor.png" alt="Counselor profile for Scott Omen with rating, description, contact button, and anonymous reviews" loading="lazy"><figcaption><b>03</b>A counselor's profile: rating, a short description, and anonymous reviews from students.</figcaption></figure>
+          <figure><img src="img/mp-4-alum-profile.png" alt="Alumni profile for Will Potts, a former Luddy student working as a data analyst at IBM" loading="lazy"><figcaption><b>04</b>An alum's profile shows where they ended up, so students can find people on the path they want.</figcaption></figure>
+          <figure><img src="img/mp-5-create.png" alt="Create Profile screen with fields for description, contact information, experience, and alumni or counselor details" loading="lazy"><figcaption><b>05</b>Alumni and counselors create their own profiles, with fields for each role.</figcaption></figure>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="label"><p class="mono muted">Decisions</p><h2>What I designed</h2></div>
+      <div class="decisions">
+        <div class="dec"><span class="tag">D1</span><div>
+          <h3>Alumni and counselors on one page</h3>
+          <p>The Connect tab puts both groups on one screen with a short preview of each, so a student sees both kinds of help at once and can open the full list when they want more.</p>
+        </div></div>
+        <div class="dec"><span class="tag">D2</span><div>
+          <h3>Filter by what matters to each group</h3>
+          <p>Alumni filter by major, job field, experience, and rating. Counselors filter by department, experience, and rating.</p>
+        </div></div>
+        <div class="dec"><span class="tag">D3</span><div>
+          <h3>Ratings and honest reviews</h3>
+          <p>Each profile shows an overall rating, lets the student leave their own, and lists anonymous reviews, including critical ones like "Was hard to reach out to..."</p>
+          <p class="why"><b>Why</b>Anonymous reviews let students say what they really think without worrying that their name will be tied to it later.</p>
+        </div></div>
+        <div class="dec"><span class="tag">D4</span><div>
+          <h3>Contact details behind one tap</h3>
+          <p>A Contact Information button opens email and department details only when a student decides to reach out.</p>
+          <p class="why"><b>Why</b>Contact details are somewhat personal, so reaching out should be a deliberate choice. Keeping them behind a button also sets a boundary and makes them harder for bots to scrape.</p>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="label"><p class="mono muted">Process</p><h2>Three rounds of sketches, three of prototypes</h2></div>
+      <div class="prose">
+        <p>We worked through sketch versions 1.0, 1.5, and 2.0, then prototypes 2.5, 3.0, and 3.5, and tested the app with users along the way. My Connections page started as a black-and-white wireframe and ended as a styled screen with real faces and a shared tab bar.</p>
+        <div class="gallery" style="grid-auto-columns:minmax(200px,230px)">
+          <figure><img src="img/mp-0-before.png" alt="Early wireframe of the Connections page with placeholder avatars and the name Jake Mack repeated" loading="lazy"><figcaption><b>2.5</b>Wireframe with placeholder people.</figcaption></figure>
+          <figure><img src="img/mp-1-connections.png" alt="Final Connections page" loading="lazy"><figcaption><b>3.5</b>Final version.</figcaption></figure>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="label"><p class="mono muted">Outcome</p><h2>Outstanding Project</h2></div>
+      <div class="prose">
+        <p>Our class voted MajorPath the Outstanding Project Award, and the professor gave it a great grade.</p>
+      </div>
+    </div>
+
+    <nav class="next" aria-label="More projects">
+      <a href="#hype-voyage"><span class="mono muted">← 02</span><span class="t">Hype Voyage</span></a>
+      <a href="#moodwave" style="text-align:right"><span class="mono muted">Next · 04</span><span class="t">Moodwave →</span></a>
+    </nav>
+  </div>
+</section>
+
+<!-- ============ MOODWAVE ============ -->
+<section class="view" data-view="moodwave" id="v-moodwave">
+  <div class="wrap">
+    <a class="back" href="#home">← All work</a>
+    <div class="cs-hero">
+      <p class="mono muted">04 · Team project</p>
+      <h1>Moodwave</h1>
+      <p class="sub">A web app that turns a color into a playlist. Pick a color for your mood, add a public Spotify profile if you want, and get 50 songs that blend your mood with your taste.</p>
+    </div>
+    <div class="spec">
+      <div><span class="mono muted">Product</span><span class="v">Web app</span></div>
+      <div><span class="mono muted">Team</span><span class="v">Team project</span></div>
+      <div><span class="mono muted">My role</span><span class="v">Product spec, build, testing</span></div>
+      <div><span class="mono muted">Built with</span><span class="v">Claude, React, Spotify API</span></div>
+      <div><span class="mono muted">When</span><span class="v">April 2026</span></div>
+    </div>
+
+    <div class="block">
+      <div class="label"><p class="mono muted">Try it</p><h2>Color in, mood out</h2></div>
+      <div>
+        <div class="mw">
+          <div class="mw-left">
+            <div class="wheel-holder">
+              <canvas id="wheel" width="480" height="480" tabindex="0" aria-label="Mood color wheel. Left and right arrows change the color; up and down change the intensity."></canvas>
+              <div class="wheel-dot" id="wheel-dot"></div>
+            </div>
+            <div class="mw-slider"><label for="sat">Intensity (center to edge) <span id="sat-v">80%</span></label><input id="sat" type="range" min="0" max="100" value="80"></div>
+            <div class="mw-slider"><label for="lig">Lightness, how positive <span id="lig-v">55%</span></label><input id="lig" type="range" min="15" max="85" value="55"></div>
+            <div class="swatch" id="swatch" aria-hidden="true"></div>
+          </div>
+          <div class="mw-right">
+            <div class="mw-mood"><span class="mono muted">Mood</span><span class="big" id="mood-name">Happy</span></div>
+            <div class="quad" id="quad"></div>
+            <div>
+              <p class="mono muted" style="margin-bottom:8px">Audio feature targets</p>
+              <div class="feats" id="feats"></div>
+            </div>
+            <div>
+              <p class="mono muted" style="margin-bottom:8px">Genres it leans toward</p>
+              <div class="chips" id="chips"></div>
+            </div>
+          </div>
+        </div>
+        <div class="pl" aria-live="polite">
+          <div class="pl-head">
+            <div class="pl-title"><div class="pl-cover" id="pl-cover" aria-hidden="true"></div><div><p class="mono muted">Generated playlist</p><h3 id="pl-name">Happy mix</h3><p class="muted" style="font-size:14px" id="pl-sub">50 songs · showing 12</p></div></div>
+            <div class="pl-ctrls">
+              <label for="pl-profile"><input type="checkbox" id="pl-profile"> Blend in a sample profile</label>
+              <button class="pill-btn" type="button" id="pl-copy">Copy as CSV</button>
+            </div>
+          </div>
+          <ol id="pl-list"></ol>
+          <div class="pl-foot"><span id="pl-status">Thumbs down removes a song and pulls in the next one.</span><span>Songs hand-picked to show the layout. The real app finds tracks through Spotify search.</span></div>
+        </div>
+        <p class="note" style="margin-top:12px">This demo runs the mood side of Moodwave in your browser with a simplified version of the mapping. The full app also pulls your public Spotify playlists and searches Spotify for real tracks, which needs API keys that can't go on a public page.</p>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="label"><p class="mono muted">Decisions</p><h2>The spec</h2></div>
+      <div class="decisions">
+        <div class="dec"><span class="tag">D1</span><div>
+          <h3>Warm colors mean energy, cool colors mean calm</h3>
+          <p>Hue sets the kind of mood, saturation sets how intense it is, and lightness sets how positive it feels. Together they become targets for valence, energy, tempo, danceability, and acousticness.</p>
+        </div></div>
+        <div class="dec"><span class="tag">D2</span><div>
+          <h3>Ground the mapping in real data</h3>
+          <p>I picked the Moodify dataset from Kaggle, about 278,000 songs labeled happy, energetic, calm, or sad. A color that sits between moods gets a blend of their targets instead of snapping to one.</p>
+        </div></div>
+        <div class="dec"><span class="tag">D3</span><div>
+          <h3>Public playlists only, and say so</h3>
+          <p>Users paste a public Spotify profile link. No login is needed, and the app tells users that only public playlists can be read. People with no playlists get recommendations from mood alone.</p>
+        </div></div>
+        <div class="dec"><span class="tag">D4</span><div>
+          <h3>Export a list instead of writing to Spotify</h3>
+          <p>The playlist lives in the app as a list of 50 songs that users can rate and export as CSV, JSON, Spotify links, or an M3U file.</p>
+          <p class="why"><b>Why</b>Writing playlists across Spotify, Apple Music, and YouTube runs into their terms of service. A list works anywhere.</p>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="label"><p class="mono muted">My part</p><h2>How it was built</h2></div>
+      <div class="prose">
+        <p>My team helped shape the decisions. The build was me and Claude: I turned our idea into a full spec, Claude wrote the code, and I set up the Spotify developer app, ran it, and tested it.</p>
+        <p>The first working version returned "Spotify unavailable." Spotify had shut down the recommendations endpoint for most developer apps, so we switched to a search-based approach: run several mood-matched searches, fetch each track's audio features, and rank tracks by how closely they match the mood. A small server keeps the API keys out of the browser.</p>
+      </div>
+    </div>
+
+    <nav class="next" aria-label="More projects">
+      <a href="#majorpath"><span class="mono muted">← 03</span><span class="t">MajorPath</span></a>
+      <a href="#home" style="text-align:right"><span class="mono muted">Back</span><span class="t">All work →</span></a>
+    </nav>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Evan Eldridge · eeldrid@iu.edu</span>
+    <span>Site built with help from Claude, from my own project work.</span>
+  </div>
+</footer>
+
+<script>
+/* ---------- routing ---------- */
+const views = ["home","say-when","hype-voyage","majorpath","moodwave"];
+function route(){
+  let h = (location.hash||"").replace("#","");
+  let target = views.includes(h) ? h : "home";
+  const anchor = (h==="about-me"||h==="contact") ? h : null;
+  if(anchor) target="home";
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on", v.dataset.view===target));
+  if(anchor){ const el=document.getElementById(anchor); if(el) el.scrollIntoView(); }
+  else window.scrollTo(0,0);
+  if(target==="moodwave") drawWheel();
+}
+window.addEventListener("hashchange", route);
+
+/* ---------- Moodwave demo ---------- */
+const M={h:40,s:80,l:55};
+const QUADS=[["Happy","high valence, high energy"],["Energetic","lower valence, high energy"],["Calm","high valence, low energy"],["Sad","low valence, low energy"]];
+const GENRES={Happy:["pop","dance","funk","indie pop"],Energetic:["hip-hop","rock","EDM","pop"],Calm:["ambient","acoustic","lo-fi","jazz"],Sad:["acoustic","lo-fi","indie","ambient"]};
+const wheel=document.getElementById("wheel"), dot=document.getElementById("wheel-dot");
+function drawWheel(){
+  const ctx=wheel.getContext("2d"), r=240;
+  const img=ctx.createImageData(480,480);
+  for(let y=0;y<480;y++)for(let x=0;x<480;x++){
+    const dx=x-r,dy=y-r,d=Math.sqrt(dx*dx+dy*dy); const i=(y*480+x)*4;
+    if(d>r){img.data[i+3]=0;continue}
+    const h=(Math.atan2(dy,dx)*180/Math.PI+360)%360, s=d/r;
+    const [R,G,B]=hsl2rgb(h,s,M.l/100); img.data[i]=R;img.data[i+1]=G;img.data[i+2]=B;img.data[i+3]=255;
+  }
+  ctx.putImageData(img,0,0); placeDot();
+}
+function hsl2rgb(h,s,l){const k=n=>(n+h/30)%12,a=s*Math.min(l,1-l),f=n=>l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));return[f(0)*255,f(8)*255,f(4)*255].map(Math.round)}
+function placeDot(){const a=M.h*Math.PI/180, rr=Math.min(1,M.s/100)*118; dot.style.left=(120+Math.cos(a)*rr)+"px"; dot.style.top=(120+Math.sin(a)*rr)+"px"; dot.style.background=`hsl(${M.h} ${M.s}% ${M.l}%)`;}
+function warmth(h){ // 1 = warm (0-90), 0 = cool (180-300), blended between
+  if(h<=90) return 1; if(h<180) return 1-(h-90)/90; if(h<=300) return 0; return (h-300)/60; }
+function compute(){
+  const w=warmth(M.h), s=M.s/100, l=(M.l-15)/70;
+  const energy=Math.min(1,Math.max(0,0.15+0.6*w*(0.5+0.5*s)+0.2*s*w));
+  const valence=Math.min(1,Math.max(0,0.1+0.8*l));
+  const q=[valence*energy,(1-valence)*energy,valence*(1-energy),(1-valence)*(1-energy)];
+  const sum=q.reduce((a,b)=>a+b,0); const qp=q.map(x=>x/sum);
+  return {energy,valence,qp,
+    feats:[["Valence",valence,(valence).toFixed(2)],["Energy",energy,energy.toFixed(2)],["Tempo",(energy),Math.round(70+energy*80)+" BPM"],["Danceability",0.25+0.45*energy+0.2*valence,(0.25+0.45*energy+0.2*valence).toFixed(2)],["Acousticness",1-0.85*energy,(1-0.85*energy).toFixed(2)]]};
+}
+function renderMood(){
+  const c=compute(); const top=c.qp.indexOf(Math.max(...c.qp));
+  document.getElementById("mood-name").textContent=QUADS[top][0];
+  document.getElementById("quad").innerHTML=QUADS.map((q,i)=>`<div class="${i===top?"top":""}"><span class="mono muted" style="font-size:11px">${q[0]}</span><span class="p">${Math.round(c.qp[i]*100)}%</span></div>`).join("");
+  document.getElementById("feats").innerHTML=c.feats.map(f=>`<div class="feat"><span>${f[0]}</span><span class="bar"><i style="width:${Math.round(Math.min(1,f[1])*100)}%"></i></span><span class="n">${f[2]}</span></div>`).join("");
+  document.getElementById("chips").innerHTML=GENRES[QUADS[top][0]].map(g=>`<span>${g}</span>`).join("");
+  document.getElementById("swatch").style.background=`hsl(${M.h} ${M.s}% ${M.l}%)`;
+  document.getElementById("sat-v").textContent=M.s+"%"; document.getElementById("lig-v").textContent=M.l+"%";
+  placeDot();
+  if(typeof buildPlaylist==="function" && document.getElementById("pl-list")) try{buildPlaylist()}catch(e){}
+}
+function pick(e){const b=wheel.getBoundingClientRect(); const x=e.clientX-b.left-b.width/2, y=e.clientY-b.top-b.height/2; M.h=Math.round((Math.atan2(y,x)*180/Math.PI+360)%360); M.s=Math.round(Math.min(1,Math.hypot(x,y)/(b.width/2))*100); document.getElementById("sat").value=M.s; renderMood();}
+let dragging=false;
+wheel.addEventListener("pointerdown",e=>{dragging=true;wheel.setPointerCapture(e.pointerId);pick(e)});
+wheel.addEventListener("pointermove",e=>{if(dragging)pick(e)});
+wheel.addEventListener("pointerup",()=>dragging=false);
+wheel.addEventListener("keydown",e=>{const k=e.key; if(k==="ArrowRight"){M.h=(M.h+10)%360} else if(k==="ArrowLeft"){M.h=(M.h+350)%360} else if(k==="ArrowUp"){M.s=Math.min(100,M.s+5)} else if(k==="ArrowDown"){M.s=Math.max(0,M.s-5)} else return; document.getElementById("sat").value=M.s; renderMood(); e.preventDefault();});
+document.getElementById("sat").addEventListener("input",e=>{M.s=+e.target.value;renderMood()});
+document.getElementById("lig").addEventListener("input",e=>{M.l=+e.target.value;drawWheel();renderMood()});
+
+/* ---------- Moodwave playlist ---------- */
+const POOL={
+ Happy:[["Walking on Sunshine","Katrina and the Waves","pop"],["Happy","Pharrell Williams","pop"],["September","Earth, Wind & Fire","funk"],["Mr. Blue Sky","Electric Light Orchestra","rock"],["Good as Hell","Lizzo","pop"],["Levitating","Dua Lipa","dance"],["Shut Up and Dance","Walk the Moon","indie pop"],["Uptown Funk","Mark Ronson ft. Bruno Mars","funk"],["Dancing Queen","ABBA","dance"],["Here Comes the Sun","The Beatles","rock"],["Electric Feel","MGMT","indie pop"],["Dog Days Are Over","Florence + The Machine","indie pop"]],
+ Energetic:[["Lose Yourself","Eminem","hip-hop"],["Mr. Brightside","The Killers","rock"],["HUMBLE.","Kendrick Lamar","hip-hop"],["Titanium","David Guetta ft. Sia","EDM"],["Seven Nation Army","The White Stripes","rock"],["Can't Hold Us","Macklemore & Ryan Lewis","hip-hop"],["Levels","Avicii","EDM"],["Thunderstruck","AC/DC","rock"],["Stronger","Kanye West","hip-hop"],["Believer","Imagine Dragons","pop"],["Till I Collapse","Eminem","hip-hop"],["Killing in the Name","Rage Against the Machine","rock"]],
+ Calm:[["Weightless","Marconi Union","ambient"],["Holocene","Bon Iver","acoustic"],["Banana Pancakes","Jack Johnson","acoustic"],["Sunset Lover","Petit Biscuit","lo-fi"],["River Flows in You","Yiruma","piano"],["Bloom","The Paper Kites","acoustic"],["Take Five","The Dave Brubeck Quartet","jazz"],["Coffee","beabadoobee","lo-fi"],["Clair de Lune","Claude Debussy","classical"],["Better Together","Jack Johnson","acoustic"],["Gymnopédie No. 1","Erik Satie","classical"],["Pink + White","Frank Ocean","R&B"]],
+ Sad:[["Someone Like You","Adele","pop"],["Skinny Love","Bon Iver","acoustic"],["The Night We Met","Lord Huron","indie"],["Fix You","Coldplay","rock"],["Motion Sickness","Phoebe Bridgers","indie"],["Liability","Lorde","pop"],["Hurt","Johnny Cash","country"],["Mad World","Gary Jules","acoustic"],["Hallelujah","Jeff Buckley","rock"],["Fade Into You","Mazzy Star","indie"],["Everybody Hurts","R.E.M.","rock"],["drivers license","Olivia Rodrigo","pop"]]
+};
+const TASTE=[["Do I Wanna Know?","Arctic Monkeys","indie rock"],["Reptilia","The Strokes","indie rock"],["Little Dark Age","MGMT","indie rock"],["Feels Like We Only Go Backwards","Tame Impala","psych rock"],["Sweater Weather","The Neighbourhood","indie rock"],["Space Song","Beach House","dream pop"],["Heat Waves","Glass Animals","indie pop"],["Last Nite","The Strokes","indie rock"],["Breezeblocks","alt-J","indie rock"],["Somebody Else","The 1975","indie pop"]];
+const PL={removed:new Set(), liked:new Set(), list:[]};
+const SHOW=12;
+const key=s=>s[0]+"|"+s[1];
+function allocate(qp,slots){ // largest remainder
+  const raw=qp.map(p=>p*slots), base=raw.map(Math.floor); let left=slots-base.reduce((a,b)=>a+b,0);
+  raw.map((r,i)=>[r-base[i],i]).sort((a,b)=>b[0]-a[0]).forEach(([_,i])=>{if(left>0){base[i]++;left--}}); return base;
+}
+function buildPlaylist(){
+  const c=compute(), profile=document.getElementById("pl-profile").checked;
+  const tasteSlots=profile?Math.round(SHOW*0.4):0, moodSlots=SHOW-tasteSlots;
+  const counts=allocate(c.qp,moodSlots), out=[];
+  QUADS.forEach((q,i)=>{ let n=counts[i]; for(const s of POOL[q[0]]){ if(n<=0) break; if(PL.removed.has(key(s))) continue; out.push({s,src:"mood",q:q[0]}); n--; } });
+  // round-robin interleave mood songs by quadrant weight order, then mix taste every few rows
+  const order=QUADS.map((q,i)=>i).sort((a,b)=>c.qp[b]-c.qp[a]).map(i=>QUADS[i][0]);
+  const byQ={}; out.forEach(o=>(byQ[o.q]=byQ[o.q]||[]).push(o));
+  const mood=[]; while(order.some(q=>byQ[q]&&byQ[q].length)) order.forEach(q=>{if(byQ[q]&&byQ[q].length) mood.push(byQ[q].shift())});
+  const taste=[]; for(const s of TASTE){ if(taste.length>=tasteSlots) break; if(!PL.removed.has(key(s))) taste.push({s,src:"taste"}); }
+  const list=[]; let ti=0; mood.forEach((m,i)=>{ list.push(m); if(taste[ti] && (i%2===1)) list.push(taste[ti++]); }); while(ti<taste.length) list.push(taste[ti++]);
+  PL.list=list.slice(0,SHOW);
+  const top=c.qp.indexOf(Math.max(...c.qp));
+  document.getElementById("pl-name").textContent=QUADS[top][0]+" mix";
+  document.getElementById("pl-sub").textContent=`50 songs · showing ${PL.list.length} · ${profile?"60% mood, 40% taste":"100% mood"}`;
+  document.getElementById("pl-cover").style.background=`linear-gradient(135deg,hsl(${M.h} ${M.s}% ${M.l}%),hsl(${(M.h+40)%360} ${M.s}% ${Math.max(15,M.l-20)}%))`;
+  const up='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2 2v4h6a2 2 0 0 1 2 2.3l-1.2 7A2 2 0 0 1 17.8 20H7"/></svg>';
+  const dn='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(180deg)"><path d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2 2v4h6a2 2 0 0 1 2 2.3l-1.2 7A2 2 0 0 1 17.8 20H7"/></svg>';
+  document.getElementById("pl-list").innerHTML=PL.list.map((o,i)=>`<li><span class="i">${String(i+1).padStart(2,"0")}</span><div><div class="t">${o.s[0]}</div><div class="a">${o.s[1]}</div></div><div class="meta"><span class="badge">${o.s[2]}</span><span class="badge ${o.src}">${o.src}</span></div><div class="rate"><button type="button" aria-label="Like ${o.s[0]}" aria-pressed="${PL.liked.has(key(o.s))}" data-like="${key(o.s)}">${up}</button><button type="button" aria-label="Remove ${o.s[0]}" data-dis="${key(o.s)}">${dn}</button></div></li>`).join("");
+}
+document.getElementById("pl-list").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.like){ const k=b.dataset.like; PL.liked.has(k)?PL.liked.delete(k):PL.liked.add(k); document.getElementById("pl-status").textContent=PL.liked.has(k)?"Liked. In the full app this boosts similar songs next time.":"Like removed."; }
+  if(b.dataset.dis){ PL.removed.add(b.dataset.dis); document.getElementById("pl-status").textContent="Removed "+b.dataset.dis.split("|")[0]+". The next match moved up."; }
+  buildPlaylist();
+});
+document.getElementById("pl-profile").addEventListener("change",buildPlaylist);
+document.getElementById("pl-copy").addEventListener("click",async()=>{
+  const csv="title,artist,genre,source\n"+PL.list.map(o=>[o.s[0],o.s[1],o.s[2],o.src].map(v=>`"${v.replace(/"/g,'""')}"`).join(",")).join("\n");
+  const st=document.getElementById("pl-status");
+  try{ await navigator.clipboard.writeText(csv); st.textContent="Copied "+PL.list.length+" songs as CSV."; }catch(err){ st.textContent="Your browser blocked copying. The full app saves CSV, JSON, Spotify links, or M3U files."; }
+});
+renderMood();
+route();
+</script>
+</body>
+</html>
